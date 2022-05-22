@@ -29,22 +29,15 @@ func NewGame() game {
 }
 
 func (p player) Other() player {
-	if p == player(X) {
-		return player(O)
+	if p == X {
+		return O
 	}
-	return player(X)
+	return X
 }
 
 func (g *game) Move(n int) (ok bool) {
-	if n < 0 || n > 8 {
-		return false
-	}
-
-	if g.board[n] != 0 {
-		return false
-	}
-
-	if g.Over() {
+	if n < 0 || n > 8 ||
+		g.board[n] != 0 || g.Over() {
 		return false
 	}
 
@@ -151,11 +144,11 @@ func (b board) String() (s string) {
 		return b[i].String()
 	}
 	s += "\n"
-	s += fmt.Sprintf(" %s | %s | %s\n", f(0), f(1), f(2))
-	s += fmt.Sprintf("---+---+---\n")
-	s += fmt.Sprintf(" %s | %s | %s\n", f(3), f(4), f(5))
-	s += fmt.Sprintf("---+---+---\n")
-	s += fmt.Sprintf(" %s | %s | %s\n", f(6), f(7), f(8))
+	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(0), f(1), f(2))
+	s += fmt.Sprintf("═══╬═══╬═══\n")
+	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(3), f(4), f(5))
+	s += fmt.Sprintf("═══╬═══╬═══\n")
+	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(6), f(7), f(8))
 	s += "\n"
 	return s
 }
@@ -193,7 +186,9 @@ func main() {
 			goto easterskip
 		}
 
-		game.Move(move)
+		if ok := game.Move(move); !ok {
+			continue
+		}
 	easterskip:
 		game.MoveAI()
 
