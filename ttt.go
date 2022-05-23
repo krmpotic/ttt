@@ -1,13 +1,17 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
 	"time"
 )
 
+var nplayers int
+
 func init() {
 	rand.Seed(time.Now().Unix())
+	flag.IntVar(&nplayers, "n", 1, "number of players")
 }
 
 type board [9]player
@@ -135,13 +139,13 @@ func (b board) Full() bool {
 	}
 	return true
 }
-func (b board) String() (s string) {
+func (g game) String() (s string) {
 	// show field number if empty
 	f := func(i int) string {
-		if b[i] == 0 {
+		if g.board[i] == 0 {
 			return fmt.Sprintf("%d", i)
 		}
-		return b[i].String()
+		return g.board[i].String()
 	}
 	s += "\n"
 	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(0), f(1), f(2))
@@ -172,28 +176,25 @@ func (p player) String() string {
 }
 
 func main() {
+	flag.Parse()
 	game := NewGame()
-
-	fmt.Print(game.board)
+	fmt.Print(game)
 	for !game.Over() {
 		fmt.Println(game.analyze())
-		var move int
-		fmt.Printf("> ")
-		fmt.Scanf("%d", &move)
-
-		if move == 9 { // easter-egg
+		if nplayers >= 1 {
+			var move int
+			fmt.Printf("> ")
+			fmt.Scanf("%d", &move)
+			if move == 9 { // easter-egg
+				game.MoveAI()
+			} else if ok := game.Move(move); !ok {
+				continue
+			}
+		}
+		if nplayers <= 1 {
 			game.MoveAI()
-			goto easterskip
 		}
-
-		if ok := game.Move(move); !ok {
-			continue
-		}
-	easterskip:
-		game.MoveAI()
-
-		fmt.Print(game.board)
-
+		fmt.Print(game)
 	}
 
 	if w := game.Winner(); w != none {
