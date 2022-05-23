@@ -91,11 +91,12 @@ func (g *game) analyze() (wins []int, draws []int, losses []int) {
 			continue
 		}
 		w, d, l := g.analyze() // enemy
-		if len(w) > 0 {
+		switch {
+		case len(w) > 0:
 			losses = append(losses, m)
-		} else if len(d) > 0 {
+		case len(d) > 0:
 			draws = append(draws, m)
-		} else if len(l) > 0 {
+		case len(l) > 0:
 			wins = append(wins, m)
 		}
 		g.unMove(m)
