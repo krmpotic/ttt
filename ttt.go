@@ -40,10 +40,7 @@ func NewGame() game {
 }
 
 func (p player) other() player {
-	if p == X {
-		return O
-	}
-	return X
+	return -1 * p
 }
 
 func (p player) String() string {
@@ -194,6 +191,6 @@ func main() {
 	if w := game.Winner(); w != none {
 		fmt.Printf("\nPlayer %s won\n", w)
 	} else {
-		fmt.Printf("Draw\n")
+		fmt.Printf("\nDraw\n")
 	}
 }
