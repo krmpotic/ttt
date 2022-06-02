@@ -8,6 +8,7 @@ import (
 )
 
 var nplayers int
+var turnAI bool
 
 type player int
 type board [9]player
@@ -31,6 +32,7 @@ const (
 func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
+	flag.BoolVar(&turnAI, "c", false, "computer starts")
 }
 
 func NewGame() game {
@@ -168,21 +170,25 @@ func (g *game) Board() (s string) {
 func main() {
 	flag.Parse()
 	game := NewGame()
-	fmt.Print(game.Board())
+	if !turnAI {
+		fmt.Println(game.Board())
+	}
 	for !game.Over() {
-		fmt.Println(game.Analyze())
-		if nplayers >= 1 {
+		switch {
+		case nplayers >= 2 || nplayers == 1 && !turnAI:
 			var move int
 			fmt.Printf("> ")
 			fmt.Scanf("%d", &move)
 			if ok := game.Move(move); !ok {
 				continue
 			}
-		}
-		if nplayers <= 1 {
+		default:
+			time.Sleep(time.Second)
 			game.MoveAI()
 		}
 		fmt.Print(game.Board())
+		fmt.Println(game.Analyze())
+		turnAI = !turnAI
 	}
 
 	if w := game.Winner(); w != none {
