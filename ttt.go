@@ -9,6 +9,7 @@ import (
 
 var nplayers int
 var turnAI bool
+var sleepAI time.Duration
 
 type player int
 type board [9]player
@@ -33,6 +34,7 @@ func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
 	flag.BoolVar(&turnAI, "c", false, "computer starts")
+	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
 }
 
 func NewGame() game {
@@ -180,7 +182,7 @@ func main() {
 				continue
 			}
 		default:
-			time.Sleep(time.Second)
+			time.Sleep(sleepAI)
 			game.MoveAI()
 		}
 		fmt.Print(game.Board())
