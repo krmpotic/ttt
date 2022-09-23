@@ -9,20 +9,9 @@ import (
 
 var nplayers int
 var turnAI bool
+var showAnalysis bool
+var random bool
 var sleepAI time.Duration
-
-type player int
-type board [9]player
-type game struct {
-	turn  player
-	board board
-}
-
-const (
-	O    = player(-1)
-	none = player(0)
-	X    = player(1)
-)
 
 const (
 	Red    = "\033[1;31m"
@@ -34,50 +23,18 @@ func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
 	flag.BoolVar(&turnAI, "c", false, "computer starts")
+	flag.BoolVar(&random, "r", false, "AI plays random moves")
+	flag.BoolVar(&showAnalysis, "a", false, "show computer analysis")
 	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
 }
 
-func NewGame() game {
-	return game{turn: X}
+type game struct {
+	turn  player
+	board board
 }
 
-func (p player) other() player {
-	return -1 * p
-}
-
-func (p player) String() string {
-	switch p {
-	case X:
-		return Green + "X" + ClrRst
-	case O:
-		return Red + "O" + ClrRst
-	default:
-		return " "
-	}
-}
-
-func (b board) full() bool {
-	for _, p := range b {
-		if p == none {
-			return false
-		}
-	}
-	return true
-}
-
-func (b board) won() bool {
-	return false ||
-		// rows
-		b[0] != none && b[0] == b[1] && b[0] == b[2] ||
-		b[3] != none && b[3] == b[4] && b[3] == b[5] ||
-		b[6] != none && b[6] == b[7] && b[6] == b[8] ||
-		// columns
-		b[0] != none && b[0] == b[3] && b[0] == b[6] ||
-		b[1] != none && b[1] == b[4] && b[1] == b[7] ||
-		b[2] != none && b[2] == b[5] && b[2] == b[8] ||
-		// diagonals
-		b[0] != none && b[0] == b[4] && b[0] == b[8] ||
-		b[2] != none && b[2] == b[4] && b[2] == b[6]
+func NewGame() *game {
+	return &game{turn: X}
 }
 
 func (g *game) Move(n int) (ok bool) {
@@ -94,17 +51,36 @@ func (g *game) unMove(n int) {
 }
 
 func (g *game) MoveAI() (ok bool) {
+	if random {
+		return g.moveRand()
+	}
+	return g.moveBest()
+}
+
+func (g *game) moveBest() (ok bool) {
 	w, d, l := g.Analyze()
+	var m int
 	switch {
 	case len(w) > 0:
-		g.Move(w[rand.Intn(len(w))])
+		m = w[rand.Intn(len(w))]
 	case len(d) > 0:
-		g.Move(d[rand.Intn(len(d))])
+		m = d[rand.Intn(len(d))]
 	case len(l) > 0:
-		g.Move(l[rand.Intn(len(l))])
+		m = l[rand.Intn(len(l))]
 	default:
 		return false
 	}
+	g.Move(m)
+	return true
+}
+
+func (g *game) moveRand() (ok bool) {
+	m_ := g.board.moves()
+	if len(m_) == 0 {
+		return false
+	}
+
+	g.Move(m_[rand.Intn(len(m_))])
 	return true
 }
 
@@ -112,10 +88,9 @@ func (g *game) Analyze() (wins []int, draws []int, losses []int) {
 	if g.Over() {
 		return nil, nil, nil
 	}
-	for m := range g.board {
-		if ok := g.Move(m); !ok {
-			continue
-		}
+	m_ := g.board.moves()
+	for m := range m_ {
+		g.Move(m)
 		switch {
 		case g.board.won():
 			wins = append(wins, m)
@@ -148,45 +123,41 @@ func (g *game) Winner() player {
 	return g.turn.other()
 }
 
-func (g *game) Board() (s string) {
-	// show field number if empty
-	f := func(i int) string {
-		if g.board[i] == none {
-			return fmt.Sprintf("%d", i)
-		}
-		return g.board[i].String()
+func (g *game) String() (s string) {
+	s = fmt.Sprintf("\n%s", g.board)
+	if showAnalysis {
+		w, d, l := g.Analyze()
+		s += fmt.Sprintf(" %s%v%s", Green, w, ClrRst)
+		s += fmt.Sprintf(" %v", d)
+		s += fmt.Sprintf(" %s%v%s", Red, l, ClrRst)
+		s += "\n"
 	}
-	s += "\n"
-	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(0), f(1), f(2))
-	s += fmt.Sprintf("═══╬═══╬═══\n")
-	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(3), f(4), f(5))
-	s += fmt.Sprintf("═══╬═══╬═══\n")
-	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(6), f(7), f(8))
-	s += "\n"
 	return s
+}
+
+func scanInt() (in int) {
+	fmt.Printf("> ")
+	fmt.Scanf("%d", &in)
+	return in
 }
 
 func main() {
 	flag.Parse()
 	game := NewGame()
 	if !turnAI {
-		fmt.Println(game.Board())
+		fmt.Print(game)
 	}
 	for !game.Over() {
 		switch {
 		case nplayers >= 2 || nplayers == 1 && !turnAI:
-			var move int
-			fmt.Printf("> ")
-			fmt.Scanf("%d", &move)
-			if ok := game.Move(move); !ok {
+			if ok := game.Move(scanInt()); !ok {
 				continue
 			}
 		default:
 			time.Sleep(sleepAI)
 			game.MoveAI()
 		}
-		fmt.Print(game.Board())
-		fmt.Println(game.Analyze())
+		fmt.Print(game)
 		turnAI = !turnAI
 	}
 
