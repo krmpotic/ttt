@@ -22,7 +22,7 @@ const (
 func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
-	flag.IntVar(&depthAI, "d", 2, "AI depth (-1 for best play)")
+	flag.IntVar(&depthAI, "d", 5, "AI depth (-1 for best play)")
 	flag.BoolVar(&turnAI, "c", false, "computer starts")
 	flag.BoolVar(&showAnalysis, "a", false, "show computer analysis")
 	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
