@@ -88,7 +88,7 @@ func (g *game) analyze(depth int) (wins, rest, losses []int) {
 		case g.board.full():
 			rest = append(rest, m)
 		default:
-			w, r, l := g.analyze(depth-1) // enemy
+			w, r, l := g.analyze(depth - 1) // enemy
 			switch {
 			case len(w) > 0:
 				losses = append(losses, m)
@@ -112,18 +112,6 @@ func (g *game) Winner() player {
 		return none
 	}
 	return g.turn.other()
-}
-
-func (g *game) String() (s string) {
-	s = fmt.Sprintf("\n%s", g.board)
-	if showAnalysis {
-		w, d, l := g.Analyze()
-		s += fmt.Sprintf(" %s%v%s", Green, w, ClrRst)
-		s += fmt.Sprintf(" %v", d)
-		s += fmt.Sprintf(" %s%v%s", Red, l, ClrRst)
-		s += "\n"
-	}
-	return s
 }
 
 func scanInt() (in int) {
