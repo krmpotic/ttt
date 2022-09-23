@@ -8,9 +8,9 @@ import (
 )
 
 var nplayers int
+var depthAI int
 var turnAI bool
 var showAnalysis bool
-var random bool
 var sleepAI time.Duration
 
 const (
@@ -22,8 +22,8 @@ const (
 func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
+	flag.IntVar(&depthAI, "d", 2, "AI depth (-1 for best play)")
 	flag.BoolVar(&turnAI, "c", false, "computer starts")
-	flag.BoolVar(&random, "r", false, "AI plays random moves")
 	flag.BoolVar(&showAnalysis, "a", false, "show computer analysis")
 	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
 }
@@ -50,21 +50,14 @@ func (g *game) unMove(n int) {
 	g.board[n], g.turn = none, g.turn.other()
 }
 
-func (g *game) MoveAI() (ok bool) {
-	if random {
-		return g.moveRand()
-	}
-	return g.moveBest()
-}
-
-func (g *game) moveBest() (ok bool) {
-	w, d, l := g.Analyze()
+func (g *game) MoveAI(depth int) (ok bool) {
+	w, r, l := g.analyze(depth)
 	var m int
 	switch {
 	case len(w) > 0:
 		m = w[rand.Intn(len(w))]
-	case len(d) > 0:
-		m = d[rand.Intn(len(d))]
+	case len(r) > 0:
+		m = r[rand.Intn(len(r))]
 	case len(l) > 0:
 		m = l[rand.Intn(len(l))]
 	default:
@@ -74,35 +67,33 @@ func (g *game) moveBest() (ok bool) {
 	return true
 }
 
-func (g *game) moveRand() (ok bool) {
-	m_ := g.board.moves()
-	if len(m_) == 0 {
-		return false
-	}
-
-	g.Move(m_[rand.Intn(len(m_))])
-	return true
+func (g *game) Analyze() (wins, draws, losses []int) {
+	return g.analyze(-1)
 }
 
-func (g *game) Analyze() (wins []int, draws []int, losses []int) {
+func (g *game) analyze(depth int) (wins, rest, losses []int) {
 	if g.Over() {
 		return nil, nil, nil
 	}
+
 	m_ := g.board.moves()
-	for m := range m_ {
+	if depth == 0 {
+		return nil, m_, nil
+	}
+	for _, m := range m_ {
 		g.Move(m)
 		switch {
 		case g.board.won():
 			wins = append(wins, m)
 		case g.board.full():
-			draws = append(draws, m)
+			rest = append(rest, m)
 		default:
-			w, d, l := g.Analyze() // enemy
+			w, r, l := g.analyze(depth-1) // enemy
 			switch {
 			case len(w) > 0:
 				losses = append(losses, m)
-			case len(d) > 0:
-				draws = append(draws, m)
+			case len(r) > 0:
+				rest = append(rest, m)
 			case len(l) > 0:
 				wins = append(wins, m)
 			}
@@ -155,7 +146,7 @@ func main() {
 			}
 		default:
 			time.Sleep(sleepAI)
-			game.MoveAI()
+			game.MoveAI(depthAI)
 		}
 		fmt.Print(game)
 		turnAI = !turnAI
