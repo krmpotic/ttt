@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+const (
+	Red    = "\033[1;31m"
+	Green  = "\033[1;32m"
+	ClrRst = "\033[0m"
+)
+
 func (b board) String() (s string) {
 	// show field number if empty
 	f := func(i int) string {

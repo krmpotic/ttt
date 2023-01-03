@@ -13,12 +13,6 @@ var turnAI bool
 var showAnalysis bool
 var sleepAI time.Duration
 
-const (
-	Red    = "\033[1;31m"
-	Green  = "\033[1;32m"
-	ClrRst = "\033[0m"
-)
-
 func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
