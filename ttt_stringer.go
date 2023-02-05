@@ -3,9 +3,9 @@ package main
 import "fmt"
 
 const (
-	Red    = "\033[1;31m"
-	Green  = "\033[1;32m"
-	ClrRst = "\033[0m"
+	red    = "\033[1;31m"
+	green  = "\033[1;32m"
+	clrRst = "\033[0m"
 )
 
 func (b board) String() (s string) {
@@ -28,9 +28,9 @@ func (g *game) String() (s string) {
 	s = fmt.Sprintf("\n%s", g.board)
 	if showAnalysis {
 		w, d, l := g.Analyze()
-		s += fmt.Sprintf(" %s%v%s", Green, w, ClrRst)
+		s += fmt.Sprintf(" %s%v%s", green, w, clrRst)
 		s += fmt.Sprintf(" %v", d)
-		s += fmt.Sprintf(" %s%v%s", Red, l, ClrRst)
+		s += fmt.Sprintf(" %s%v%s", red, l, clrRst)
 		s += "\n"
 	}
 	return s
@@ -38,10 +38,10 @@ func (g *game) String() (s string) {
 
 func (p player) String() string {
 	switch p {
-	case X:
-		return Green + "X" + ClrRst
-	case O:
-		return Red + "O" + ClrRst
+	case x:
+		return green + "X" + clrRst
+	case o:
+		return red + "O" + clrRst
 	default:
 		return " "
 	}

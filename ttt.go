@@ -27,8 +27,8 @@ type game struct {
 	board board
 }
 
-func NewGame() *game {
-	return &game{turn: X}
+func newGame() *game {
+	return &game{turn: x}
 }
 
 func (g *game) Move(n int) (ok bool) {
@@ -70,11 +70,11 @@ func (g *game) analyze(depth int) (wins, rest, losses []int) {
 		return nil, nil, nil
 	}
 
-	m_ := g.board.moves()
+	moves := g.board.moves()
 	if depth == 0 {
-		return nil, m_, nil
+		return nil, moves, nil
 	}
-	for _, m := range m_ {
+	for _, m := range moves {
 		g.Move(m)
 		switch {
 		case g.board.won():
@@ -116,7 +116,7 @@ func scanInt() (in int) {
 
 func main() {
 	flag.Parse()
-	game := NewGame()
+	game := newGame()
 	if !turnAI {
 		fmt.Print(game)
 	}

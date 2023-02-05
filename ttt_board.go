@@ -1,9 +1,9 @@
 package main
 
 const (
-	O    = player(-1)
+	o    = player(-1)
 	none = player(0)
-	X    = player(1)
+	x    = player(1)
 )
 
 type player int
