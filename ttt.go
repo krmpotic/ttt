@@ -61,10 +61,6 @@ func (g *game) MoveAI(depth int) (ok bool) {
 	return true
 }
 
-func (g *game) Analyze() (wins, draws, losses []int) {
-	return g.analyze(-1)
-}
-
 func (g *game) analyze(depth int) (wins, rest, losses []int) {
 	if g.Over() {
 		return nil, nil, nil
