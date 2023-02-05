@@ -137,4 +137,5 @@ func main() {
 	} else {
 		fmt.Printf("\nDraw\n")
 	}
+	time.Sleep(sleepAI) // useful if program run in a loop, WarGames style
 }
