@@ -12,6 +12,7 @@ var depthAI int
 var turnAI bool
 var showAnalysis bool
 var sleepAI time.Duration
+var clearScreen bool
 
 func init() {
 	rand.Seed(time.Now().Unix())
@@ -19,6 +20,7 @@ func init() {
 	flag.IntVar(&depthAI, "d", 5, "AI depth (-1 for best play)")
 	flag.BoolVar(&turnAI, "c", false, "computer starts")
 	flag.BoolVar(&showAnalysis, "a", false, "show computer analysis")
+	flag.BoolVar(&clearScreen, "cls", true, "show one board at a time (clear screen)")
 	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
 }
 

@@ -6,6 +6,7 @@ const (
 	red    = "\033[1;31m"
 	green  = "\033[1;32m"
 	clrRst = "\033[0m"
+	clrScr = "\033[H\033[2J"
 )
 
 func (b board) String() (s string) {
@@ -15,6 +16,9 @@ func (b board) String() (s string) {
 			return fmt.Sprintf("%d", i)
 		}
 		return b[i].String()
+	}
+	if clearScreen {
+		s += clrScr
 	}
 	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(0), f(1), f(2))
 	s += fmt.Sprintf("═══╬═══╬═══\n")
