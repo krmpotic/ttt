@@ -1,12 +1,12 @@
 package main
 
+type player int
+
 const (
 	o    = player(-1)
 	none = player(0)
 	x    = player(1)
 )
-
-type player int
 
 func (p player) other() player {
 	return -1 * p
