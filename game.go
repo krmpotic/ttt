@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 )
 
@@ -88,16 +87,4 @@ func (g *game) Winner() player {
 		return none
 	}
 	return g.turn.other()
-}
-
-func (g *game) String() (s string) {
-	s = fmt.Sprintf("\n%s", g.board)
-	if showAnalysis {
-		w, d, l := g.analyze(-1)
-		s += fmt.Sprintf(" %s%v%s", green, w, clrRst)
-		s += fmt.Sprintf(" %v", d)
-		s += fmt.Sprintf(" %s%v%s", red, l, clrRst)
-		s += "\n"
-	}
-	return s
 }

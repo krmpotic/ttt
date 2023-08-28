@@ -41,7 +41,7 @@ func main() {
 	flag.Parse()
 	game := newGame()
 	if !turnAI {
-		fmt.Print(game)
+		fmt.Print(game.board)
 	}
 	for !game.Over() {
 		switch {
@@ -53,7 +53,15 @@ func main() {
 			time.Sleep(sleepAI)
 			game.MoveAI(depthAI)
 		}
-		fmt.Print(game)
+
+		fmt.Println(game.board)
+		if showAnalysis {
+			w, d, l := game.analyze(-1)
+			fmt.Printf(" %s%v%s", green, w, clrRst)
+			fmt.Printf(" %v", d)
+			fmt.Printf(" %s%v%s\n\n", red, l, clrRst)
+		}
+
 		turnAI = !turnAI
 	}
 
