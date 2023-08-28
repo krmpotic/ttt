@@ -29,14 +29,17 @@ func (g *game) unMove(n int) {
 
 func (g *game) MoveAI(depth int) (ok bool) {
 	w, r, l := g.analyze(depth)
+	rand := func(m []int) int {
+		return m[rand.Intn(len(m))]
+	}
 	var m int
 	switch {
 	case len(w) > 0:
-		m = w[rand.Intn(len(w))]
+		m = rand(w)
 	case len(r) > 0:
-		m = r[rand.Intn(len(r))]
+		m = rand(r)
 	case len(l) > 0:
-		m = l[rand.Intn(len(l))]
+		m = rand(l)
 	default:
 		return false
 	}
