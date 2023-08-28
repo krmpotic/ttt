@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type board [9]player
 
 func (b board) full() bool {
@@ -33,4 +35,23 @@ func (b board) moves() (m []int) {
 		}
 	}
 	return m
+}
+
+func (b board) String() (s string) {
+	// show field number if empty
+	f := func(i int) string {
+		if b[i] == none {
+			return fmt.Sprintf("%d", i)
+		}
+		return b[i].String()
+	}
+	if clearScreen {
+		s += clrScr
+	}
+	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(0), f(1), f(2))
+	s += fmt.Sprintf("═══╬═══╬═══\n")
+	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(3), f(4), f(5))
+	s += fmt.Sprintf("═══╬═══╬═══\n")
+	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(6), f(7), f(8))
+	return s
 }
