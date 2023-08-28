@@ -14,18 +14,13 @@ func (b board) full() bool {
 }
 
 func (b board) won() bool {
-	return false ||
-		// rows
-		b[0] != none && b[0] == b[1] && b[0] == b[2] ||
-		b[3] != none && b[3] == b[4] && b[3] == b[5] ||
-		b[6] != none && b[6] == b[7] && b[6] == b[8] ||
-		// columns
-		b[0] != none && b[0] == b[3] && b[0] == b[6] ||
-		b[1] != none && b[1] == b[4] && b[1] == b[7] ||
-		b[2] != none && b[2] == b[5] && b[2] == b[8] ||
-		// diagonals
-		b[0] != none && b[0] == b[4] && b[0] == b[8] ||
-		b[2] != none && b[2] == b[4] && b[2] == b[6]
+	s := func(i, j, k int) bool {
+		return b[i] != none && b[i] == b[j] && b[i] == b[k]
+	}
+
+	return s(0, 4, 8) || s(2, 4, 6) || // diagonals
+		s(0, 1, 2) || s(3, 4, 5) || s(6, 7, 8) || // rows
+		s(0, 3, 6) || s(1, 4, 7) || s(2, 5, 8) // colums
 }
 
 func (b board) moves() (m []int) {
