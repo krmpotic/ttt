@@ -27,7 +27,7 @@ func init() {
 	flag.IntVar(&depthAI, "d", 5, "AI depth (-1 for best play)")
 	flag.BoolVar(&turnAI, "c", false, "computer starts")
 	flag.BoolVar(&showAnalysis, "a", false, "show computer analysis")
-	flag.BoolVar(&clearScreen, "cls", true, "show one board at a time (clear screen)")
+	flag.BoolVar(&clearScreen, "l", false, "show one board at a time (clear screen)")
 	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
 }
 
