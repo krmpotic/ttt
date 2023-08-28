@@ -2,13 +2,6 @@ package main
 
 import "fmt"
 
-const (
-	red    = "\033[1;31m"
-	green  = "\033[1;32m"
-	clrRst = "\033[0m"
-	clrScr = "\033[H\033[2J"
-)
-
 func (b board) String() (s string) {
 	// show field number if empty
 	f := func(i int) string {
@@ -38,15 +31,4 @@ func (g *game) String() (s string) {
 		s += "\n"
 	}
 	return s
-}
-
-func (p player) String() string {
-	switch p {
-	case x:
-		return green + "X" + clrRst
-	case o:
-		return red + "O" + clrRst
-	default:
-		return " "
-	}
 }
