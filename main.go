@@ -25,10 +25,10 @@ func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
 	flag.IntVar(&depthAI, "d", 5, "AI depth (-1 for best play)")
-	flag.BoolVar(&turnAI, "c", false, "computer starts")
-	flag.BoolVar(&showAnalysis, "a", false, "show computer analysis")
-	flag.BoolVar(&clearScreen, "l", false, "show one board at a time (clear screen)")
-	flag.DurationVar(&sleepAI, "s", 0, `simulate thinking by "sleeping"`)
+	flag.BoolVar(&turnAI, "c", true, "computer starts")
+	flag.BoolVar(&showAnalysis, "a", true, "show computer analysis")
+	flag.BoolVar(&clearScreen, "l", true, "show one board at a time (clear screen)")
+	flag.DurationVar(&sleepAI, "s", 5e8, `simulate thinking by "sleeping"`)
 }
 
 func scanInt() (in int) {
