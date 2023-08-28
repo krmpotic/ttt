@@ -1,16 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 type board [9]player
 
 func (b board) full() bool {
-	for _, p := range b {
-		if p == none {
-			return false
-		}
-	}
-	return true
+	return !slices.Contains(b[:], none)
 }
 
 func (b board) won() bool {
