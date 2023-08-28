@@ -12,13 +12,13 @@ func (b board) full() bool {
 }
 
 func (b board) won() bool {
-	s := func(i, j, k int) bool {
+	eq := func(i, j, k int) bool {
 		return b[i] != none && b[i] == b[j] && b[i] == b[k]
 	}
 
-	return s(0, 4, 8) || s(2, 4, 6) || // diagonals
-		s(0, 1, 2) || s(3, 4, 5) || s(6, 7, 8) || // rows
-		s(0, 3, 6) || s(1, 4, 7) || s(2, 5, 8) // colums
+	return eq(0, 4, 8) || eq(2, 4, 6) || // diagonals
+		eq(0, 1, 2) || eq(3, 4, 5) || eq(6, 7, 8) || // rows
+		eq(0, 3, 6) || eq(1, 4, 7) || eq(2, 5, 8) // colums
 }
 
 func (b board) moves() (m []int) {
