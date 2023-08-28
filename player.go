@@ -9,7 +9,7 @@ const (
 )
 
 func (p player) other() player {
-	return -1 * p
+	return -p
 }
 
 func (p player) String() string {
