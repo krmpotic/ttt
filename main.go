@@ -10,17 +10,15 @@ import (
 var nplayers int
 var depthAI int
 var turnAI bool
-var showAnalysis bool
 var sleepAI time.Duration
-var clearScreen bool
 
 func init() {
 	rand.Seed(time.Now().Unix())
 	flag.IntVar(&nplayers, "n", 1, "number of players")
 	flag.IntVar(&depthAI, "d", 5, "AI depth (-1 for best play)")
 	flag.BoolVar(&turnAI, "c", true, "computer starts")
-	flag.BoolVar(&showAnalysis, "a", true, "show computer analysis")
-	flag.BoolVar(&clearScreen, "l", true, "show one board at a time (clear screen)")
+	flag.BoolVar(&ShowAnalysis, "a", true, "show computer analysis")
+	flag.BoolVar(&ClearScreen, "l", true, "show one board at a time (clear screen)")
 	flag.DurationVar(&sleepAI, "s", 5e8, `simulate thinking by "sleeping"`)
 }
 
@@ -33,9 +31,8 @@ func scanInt() (in int) {
 func main() {
 	flag.Parse()
 	game := NewGame()
-	if !turnAI {
-		fmt.Print(game.board)
-	}
+
+	fmt.Println(game)
 	for !game.Over() {
 		switch {
 		case nplayers >= 2 || nplayers == 1 && !turnAI:
@@ -47,21 +44,15 @@ func main() {
 			game.MoveAI(depthAI)
 		}
 
-		fmt.Println(game.board)
-		if showAnalysis {
-			w, d, l := game.analyze(-1)
-			fmt.Printf(" %s%v%s", green, w, clrRst)
-			fmt.Printf(" %v", d)
-			fmt.Printf(" %s%v%s\n\n", red, l, clrRst)
-		}
+		fmt.Println(game)
 
 		turnAI = !turnAI
 	}
 
 	if w := game.Winner(); w != None {
-		fmt.Printf("\nPlayer %s won\n", w)
+		fmt.Printf("Player %s won\n", w)
 	} else {
-		fmt.Printf("\nDraw\n")
+		fmt.Printf("Draw\n")
 	}
 	time.Sleep(sleepAI) // useful if program run in a loop, WarGames style
 }

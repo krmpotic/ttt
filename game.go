@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 )
+
+var ShowAnalysis bool
 
 type game struct {
 	turn  Player
@@ -87,4 +90,19 @@ func (g *game) Winner() Player {
 		return None
 	}
 	return g.turn.Other()
+}
+
+func (g *game) String() string {
+	s := ""
+
+	s += g.board.String()
+
+	if ShowAnalysis {
+		w, d, l := g.analyze(-1)
+		s += fmt.Sprintf(" %s%v%s", green, w, clrRst)
+		s += fmt.Sprintf(" %v", d)
+		s += fmt.Sprintf(" %s%v%s\n\n", red, l, clrRst)
+	}
+
+	return s
 }

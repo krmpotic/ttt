@@ -5,6 +5,8 @@ import (
 	"slices"
 )
 
+var ClearScreen bool
+
 type Board [9]Player
 
 func (b Board) Full() bool {
@@ -38,7 +40,7 @@ func (b Board) String() (s string) {
 		}
 		return b[i].String()
 	}
-	if clearScreen {
+	if ClearScreen {
 		s += clrScr
 	}
 	s += fmt.Sprintf(" %s ║ %s ║ %s\n", f(0), f(1), f(2))
