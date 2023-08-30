@@ -6,7 +6,7 @@ import (
 
 type game struct {
 	turn  Player
-	board board
+	board Board
 }
 
 func NewGame() *game {
@@ -51,16 +51,16 @@ func (g *game) analyze(depth int) (wins, rest, losses []int) {
 		return nil, nil, nil
 	}
 
-	moves := g.board.moves()
+	moves := g.board.Moves()
 	if depth == 0 {
 		return nil, moves, nil
 	}
 	for _, m := range moves {
 		g.Move(m)
 		switch {
-		case g.board.won():
+		case g.board.Won():
 			wins = append(wins, m)
-		case g.board.full():
+		case g.board.Full():
 			rest = append(rest, m)
 		default:
 			w, r, l := g.analyze(depth - 1) // enemy
@@ -79,11 +79,11 @@ func (g *game) analyze(depth int) (wins, rest, losses []int) {
 }
 
 func (g *game) Over() (gameOver bool) {
-	return g.board.full() || g.board.won()
+	return g.board.Full() || g.board.Won()
 }
 
 func (g *game) Winner() Player {
-	if !g.board.won() {
+	if !g.board.Won() {
 		return None
 	}
 	return g.turn.Other()

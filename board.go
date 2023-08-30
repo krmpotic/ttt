@@ -5,13 +5,13 @@ import (
 	"slices"
 )
 
-type board [9]Player
+type Board [9]Player
 
-func (b board) full() bool {
+func (b Board) Full() bool {
 	return !slices.Contains(b[:], None)
 }
 
-func (b board) won() bool {
+func (b Board) Won() bool {
 	eq := func(i, j, k int) bool {
 		return b[i] != None && b[i] == b[j] && b[i] == b[k]
 	}
@@ -21,7 +21,7 @@ func (b board) won() bool {
 		eq(0, 3, 6) || eq(1, 4, 7) || eq(2, 5, 8) // colums
 }
 
-func (b board) moves() (m []int) {
+func (b Board) Moves() (m []int) {
 	for i, p := range b {
 		if p == None {
 			m = append(m, i)
@@ -30,7 +30,7 @@ func (b board) moves() (m []int) {
 	return m
 }
 
-func (b board) String() (s string) {
+func (b Board) String() (s string) {
 	// show field number if empty
 	f := func(i int) string {
 		if b[i] == None {
