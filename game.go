@@ -16,6 +16,10 @@ func NewGame() *game {
 	return &game{turn: X}
 }
 
+func (g *game) Turn() Player {
+	return g.turn
+}
+
 func (g *game) Move(n int) (ok bool) {
 	if n < 0 || n > 8 || g.board[n] != None || g.Over() {
 		return false

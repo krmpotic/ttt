@@ -22,8 +22,8 @@ func init() {
 	flag.DurationVar(&sleepAI, "s", 5e8, `simulate thinking by "sleeping"`)
 }
 
-func scanInt() (in int) {
-	fmt.Printf("> ")
+func scanMove(p Player) (in int) {
+	fmt.Printf("%v> ", p)
 	fmt.Scanf("%d", &in)
 	return in
 }
@@ -34,12 +34,12 @@ func main() {
 
 	fmt.Println(game)
 	for !game.Over() {
-		switch {
-		case nplayers >= 2 || nplayers == 1 && !turnAI:
-			if ok := game.Move(scanInt()); !ok {
+		if nplayers >= 2 || nplayers == 1 && !turnAI { // human turn
+			m := scanMove(game.Turn())
+			if ok := game.Move(m); !ok {
 				continue
 			}
-		default:
+		} else {
 			time.Sleep(sleepAI)
 			game.MoveAI(depthAI)
 		}
