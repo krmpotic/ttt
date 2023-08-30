@@ -5,25 +5,25 @@ import (
 )
 
 type game struct {
-	turn  player
+	turn  Player
 	board board
 }
 
-func newGame() *game {
-	return &game{turn: x}
+func NewGame() *game {
+	return &game{turn: X}
 }
 
 func (g *game) Move(n int) (ok bool) {
-	if n < 0 || n > 8 || g.board[n] != none || g.Over() {
+	if n < 0 || n > 8 || g.board[n] != None || g.Over() {
 		return false
 	}
 
-	g.board[n], g.turn = g.turn, g.turn.other()
+	g.board[n], g.turn = g.turn, g.turn.Other()
 	return true
 }
 
 func (g *game) unMove(n int) {
-	g.board[n], g.turn = none, g.turn.other()
+	g.board[n], g.turn = None, g.turn.Other()
 }
 
 func (g *game) MoveAI(depth int) (ok bool) {
@@ -82,9 +82,9 @@ func (g *game) Over() (gameOver bool) {
 	return g.board.full() || g.board.won()
 }
 
-func (g *game) Winner() player {
+func (g *game) Winner() Player {
 	if !g.board.won() {
-		return none
+		return None
 	}
-	return g.turn.other()
+	return g.turn.Other()
 }

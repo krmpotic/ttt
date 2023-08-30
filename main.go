@@ -39,7 +39,7 @@ func scanInt() (in int) {
 
 func main() {
 	flag.Parse()
-	game := newGame()
+	game := NewGame()
 	if !turnAI {
 		fmt.Print(game.board)
 	}
@@ -65,7 +65,7 @@ func main() {
 		turnAI = !turnAI
 	}
 
-	if w := game.Winner(); w != none {
+	if w := game.Winner(); w != None {
 		fmt.Printf("\nPlayer %s won\n", w)
 	} else {
 		fmt.Printf("\nDraw\n")

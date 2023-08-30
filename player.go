@@ -1,22 +1,22 @@
 package main
 
-type player int
+type Player int
 
 const (
-	o    = player(-1)
-	none = player(0)
-	x    = player(1)
+	O    = Player(-1)
+	None = Player(0)
+	X    = Player(1)
 )
 
-func (p player) other() player {
+func (p Player) Other() Player {
 	return -p
 }
 
-func (p player) String() string {
+func (p Player) String() string {
 	switch p {
-	case x:
+	case X:
 		return green + "X" + clrRst
-	case o:
+	case O:
 		return red + "O" + clrRst
 	default:
 		return " "

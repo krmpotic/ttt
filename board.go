@@ -5,15 +5,15 @@ import (
 	"slices"
 )
 
-type board [9]player
+type board [9]Player
 
 func (b board) full() bool {
-	return !slices.Contains(b[:], none)
+	return !slices.Contains(b[:], None)
 }
 
 func (b board) won() bool {
 	eq := func(i, j, k int) bool {
-		return b[i] != none && b[i] == b[j] && b[i] == b[k]
+		return b[i] != None && b[i] == b[j] && b[i] == b[k]
 	}
 
 	return eq(0, 4, 8) || eq(2, 4, 6) || // diagonals
@@ -23,7 +23,7 @@ func (b board) won() bool {
 
 func (b board) moves() (m []int) {
 	for i, p := range b {
-		if p == none {
+		if p == None {
 			m = append(m, i)
 		}
 	}
@@ -33,7 +33,7 @@ func (b board) moves() (m []int) {
 func (b board) String() (s string) {
 	// show field number if empty
 	f := func(i int) string {
-		if b[i] == none {
+		if b[i] == None {
 			return fmt.Sprintf("%d", i)
 		}
 		return b[i].String()
